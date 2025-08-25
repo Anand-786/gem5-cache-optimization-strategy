@@ -1,6 +1,6 @@
-# Victim Cache Evaluation in gem5
+# Victim Cache Analysis in gem5
 
-Extending gem5 to evaluate victim cache effectiveness in L1 cache eviction scenarios.  
+Extending gem5 to analyze victim cache effectiveness in L1 cache eviction scenarios.  
 Tracks victim cache hits/misses and reports them in gem5 stats.
 
 
