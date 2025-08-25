@@ -1,3 +1,10 @@
+# Victim Cache Evaluation in gem5
+
+Extending gem5 to evaluate victim cache effectiveness in L1 cache eviction scenarios.  
+Tracks victim cache hits/misses and reports them in gem5 stats.
+
+---
+
 # The gem5 Simulator
 
 This is the repository for the gem5 simulator. It contains the full source code
