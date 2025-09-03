@@ -1015,6 +1015,10 @@ machine(MachineType:L1Cache, "MESI Directory L1 Cache CMP")
 
   action(uu_profileDataHit, "\udh", desc="Profile the demand hit") {
     L1Dcache.profileDemandHit();
+
+    //*******************************
+    L1Dcache.profileHit();
+    //*******************************
   }
 
   action(po_observeHit, "\ph", desc="Inform the prefetcher about the hit") {

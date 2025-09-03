@@ -572,7 +572,9 @@ CacheMemoryStats::CacheMemoryStats(statistics::Group *parent)
       ADD_STAT(m_prefetch_misses, "Number of cache prefetch misses"),
       ADD_STAT(m_prefetch_accesses, "Number of cache prefetch accesses",
                m_prefetch_hits + m_prefetch_misses),
-      ADD_STAT(m_accessModeType, "")
+      ADD_STAT(m_accessModeType, ""),
+      //My added ADD_STAT
+      ADD_STAT(m_count_hits, "My stat for checking correct new stat addition")
 {
     numDataArrayReads
         .flags(statistics::nozero);
@@ -817,6 +819,12 @@ void
 CacheMemory::profilePrefetchMiss()
 {
     cacheMemoryStats.m_prefetch_misses++;
+}
+
+void
+CacheMemory::profileHit()
+{
+    cacheMemoryStats.m_count_hits++;
 }
 
 } // namespace ruby

@@ -1,5 +1,6 @@
 build
 gem5_build
+reference
 parser.out
 parsetab.py
 cscope.files
