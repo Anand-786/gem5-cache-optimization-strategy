@@ -45,6 +45,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <list>     //added by me
 
 #include "base/statistics.hh"
 #include "mem/cache/replacement_policies/base.hh"
@@ -88,6 +89,9 @@ class CacheMemory : public SimObject
 
     // tests to see if an address is present in the cache
     bool isTagPresent(Addr address) const;
+
+    //Added by me Victim Cache
+    Addr getAddressWithoutBlockOffset(Addr address);
 
     // Returns true if there is:
     //   a) a tag match on this address or there is
@@ -160,6 +164,7 @@ class CacheMemory : public SimObject
     int getCacheSize() const { return m_cache_size; }
     int getCacheAssoc() const { return m_cache_assoc; }
     int getNumBlocks() const { return m_cache_num_sets * m_cache_assoc; }
+    int getCacheBits() const { return m_block_bits; }
     Addr getAddressAtIdx(int idx) const;
 
   private:
@@ -198,6 +203,7 @@ class CacheMemory : public SimObject
     int m_start_index_bit;
     bool m_resource_stalls;
     int m_block_size;
+    int m_block_bits;     //my added parameter
 
     /**
      * We store all the ReplacementData in a 2-dimensional array. By doing
@@ -257,6 +263,10 @@ class CacheMemory : public SimObject
 
           //My added stat for checking correctness
           statistics::Scalar m_count_hits;
+          //Victim cache stat
+          statistics::Scalar m_victim_hits;
+          statistics::Scalar m_victim_misses;
+          statistics::Scalar m_victim_accesses;
       } cacheMemoryStats;
 
     public:
@@ -268,6 +278,9 @@ class CacheMemory : public SimObject
       void profilePrefetchMiss();
       //My added function
       void profileHit();
+      // Victim Cache Functions
+      void storeEvictedInVictimBuff(Addr evictedAddr);
+      void checkInVictimCache(Addr requestedLine);
 };
 
 std::ostream& operator<<(std::ostream& out, const CacheMemory& obj);

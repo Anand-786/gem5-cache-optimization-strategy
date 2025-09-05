@@ -967,6 +967,10 @@ machine(MachineType:L1Cache, "MESI Directory L1 Cache CMP")
   action(ff_deallocateL1CacheBlock, "\f", desc="Deallocate L1 cache block.  Sets the cache to not present, allowing a replacement in parallel with a fetch.") {
     if (L1Dcache.isTagPresent(address)) {
       L1Dcache.deallocate(address);
+
+      //*************************
+        L1Dcache.storeEvictedInVictimBuff(address);
+      //*************************
     } else {
       L1Icache.deallocate(address);
     }
@@ -1011,6 +1015,10 @@ machine(MachineType:L1Cache, "MESI Directory L1 Cache CMP")
 
   action(uu_profileDataMiss, "\udm", desc="Profile the demand miss") {
     L1Dcache.profileDemandMiss();
+
+    //****************************
+      L1Dcache.checkInVictimCache(address);
+    //****************************
   }
 
   action(uu_profileDataHit, "\udh", desc="Profile the demand hit") {

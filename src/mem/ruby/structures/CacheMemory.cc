@@ -59,6 +59,14 @@ namespace gem5
 namespace ruby
 {
 
+    //***********************
+    //  Victim Cache
+        std::list<Addr> victim_buffer;
+        std::unordered_map<Addr, std::list<Addr>::iterator> lookup_map;
+        int maxVCSize = 8;
+    //***********************
+
+
 std::ostream&
 operator<<(std::ostream& out, const CacheMemory& obj)
 {
@@ -104,6 +112,7 @@ void
 CacheMemory::init()
 {
     assert(m_block_size != 0);
+    m_block_bits = floorLog2(m_block_size);             //my added parameter
     m_cache_num_sets = (m_cache_size / m_cache_assoc) / m_block_size;
     assert(m_cache_num_sets > 1);
     m_cache_num_set_bits = floorLog2(m_cache_num_sets);
@@ -132,6 +141,15 @@ CacheMemory::~CacheMemory()
         }
     }
 }
+
+//********************
+//  Victim Cache Helper Function
+Addr
+CacheMemory::getAddressWithoutBlockOffset(Addr address){
+    Addr block_address = address >> m_block_bits;
+    return block_address;
+}
+//********************
 
 // convert a Address to its location in the cache
 int64_t
@@ -574,7 +592,11 @@ CacheMemoryStats::CacheMemoryStats(statistics::Group *parent)
                m_prefetch_hits + m_prefetch_misses),
       ADD_STAT(m_accessModeType, ""),
       //My added ADD_STAT
-      ADD_STAT(m_count_hits, "My stat for checking correct new stat addition")
+      ADD_STAT(m_count_hits, "My stat for checking correct new stat addition"),
+      //Victim Cache STAT
+      ADD_STAT(m_victim_hits, "No. of Victim Cache hits"),
+      ADD_STAT(m_victim_misses, "No. of Victim Cache misses"),
+      ADD_STAT(m_victim_accesses, "No. of Victim Cache accesses")
 {
     numDataArrayReads
         .flags(statistics::nozero);
@@ -825,6 +847,35 @@ void
 CacheMemory::profileHit()
 {
     cacheMemoryStats.m_count_hits++;
+}
+
+//Evicted Block Fill in Victim Cache
+void
+CacheMemory::storeEvictedInVictimBuff(Addr evictedAddr){
+    if(victim_buffer.size() == maxVCSize){
+        Addr oldest_block = victim_buffer.front();
+        lookup_map.erase(oldest_block);
+        victim_buffer.pop_front();
+    }
+    //We have space in Victim Cache
+    victim_buffer.push_back(getAddressWithoutBlockOffset(evictedAddr));
+    lookup_map[getAddressWithoutBlockOffset(evictedAddr)] = prev(victim_buffer.end());
+}
+
+void 
+CacheMemory::checkInVictimCache(Addr requestedAddr){
+    cacheMemoryStats.m_victim_accesses++;
+    if(lookup_map.find(requestedAddr) != lookup_map.end()){
+        auto map_it = lookup_map.find(getAddressWithoutBlockOffset(requestedAddr));
+        if (map_it != lookup_map.end()) {
+            victim_buffer.erase(map_it->second);       // remove from list
+            lookup_map.erase(map_it);                  // remove from map
+        }
+        cacheMemoryStats.m_victim_hits++;
+    }
+    else{
+        cacheMemoryStats.m_victim_misses++;
+    }
 }
 
 } // namespace ruby
