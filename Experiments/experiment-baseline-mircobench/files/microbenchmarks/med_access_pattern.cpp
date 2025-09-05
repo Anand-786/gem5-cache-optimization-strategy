@@ -1,8 +1,8 @@
 // victim_test1_small.cpp - Reduced size with progress indicators
 #include <iostream>
 
-#define ARRAY_SIZE (64 * 1024)  // Reduced from 64K to 16K elements
-#define ITERATIONS 1000          // Reduced from 1000 to 100
+#define ARRAY_SIZE (16 * 1024)  // Reduced from 64K to 16K elements
+#define ITERATIONS 100          // Reduced from 1000 to 100
 #define PROGRESS_INTERVAL 10    // Print every 10 iterations
 
 int main() {

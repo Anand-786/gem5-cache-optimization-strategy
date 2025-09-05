@@ -2125,7 +2125,7 @@
                                 "name": "workload",
                                 "path": "board.processor.cores.core.workload",
                                 "cmd": [
-                                    "./Experiments/experiment-baseline-mircobench/files/binaries/tiny_a_p"
+                                    "./Experiments/experiment-baseline-mircobench/files/binaries/med_a_p"
                                 ],
                                 "cwd": "/home/anand/Documents/gem5-victim-cache",
                                 "drivers": [],
@@ -2134,7 +2134,7 @@
                                 "errout": "cerr",
                                 "euid": 100,
                                 "eventq_index": 0,
-                                "executable": "./Experiments/experiment-baseline-mircobench/files/binaries/tiny_a_p",
+                                "executable": "./Experiments/experiment-baseline-mircobench/files/binaries/med_a_p",
                                 "gid": 100,
                                 "input": "cin",
                                 "kvmInSE": false,

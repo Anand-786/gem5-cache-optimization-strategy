@@ -16,8 +16,8 @@ if len(sys.argv) != 2:
 binary_path = sys.argv[1]
 
 cache_hierarchy = MESITwoLevelCacheHierarchy(
-    l1d_size="16KiB",
-    l1d_assoc=8,
+    l1d_size="8KiB",
+    l1d_assoc=2,
     l1i_size="16KiB",
     l1i_assoc=8,
     l2_size="256KiB",
