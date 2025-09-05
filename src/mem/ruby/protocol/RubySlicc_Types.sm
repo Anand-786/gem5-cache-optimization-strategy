@@ -213,7 +213,7 @@ structure (CacheMemory, external = "yes") {
   AbstractCacheEntry getNullEntry();
   AbstractCacheEntry allocate(Addr, AbstractCacheEntry);
   AbstractCacheEntry allocate(Addr, AbstractCacheEntry, bool);
-  
+
   //my victim cache helper
   Addr getAddressWithoutBlockOffset(Addr);
 
@@ -242,7 +242,7 @@ structure (CacheMemory, external = "yes") {
   void profilePrefetchHit();
   void profilePrefetchMiss();
   void profileHit();
-  void storeEvictedInVictimBuff(Add);
+  void storeEvictedInVictimBuff(Addr);
   void checkInVictimCache(Addr);
 }
 
