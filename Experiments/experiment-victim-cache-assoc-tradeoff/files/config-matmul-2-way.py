@@ -10,7 +10,7 @@ from gem5.resources.resource import obtain_resource
 from gem5.simulate.simulator import Simulator
 
 cache_hierarchy = MESITwoLevelCacheHierarchy(
-    l1d_size="8KiB",
+    l1d_size="4KiB",
     l1d_assoc=2,
     l1i_size="16KiB",
     l1i_assoc=8,
