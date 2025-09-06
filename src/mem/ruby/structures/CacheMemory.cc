@@ -865,8 +865,9 @@ CacheMemory::storeEvictedInVictimBuff(Addr evictedAddr){
 void 
 CacheMemory::checkInVictimCache(Addr requestedAddr){
     cacheMemoryStats.m_victim_accesses++;
-    if(lookup_map.find(requestedAddr) != lookup_map.end()){
-        auto map_it = lookup_map.find(getAddressWithoutBlockOffset(requestedAddr));
+    Addr requestedBlock = getAddressWithoutBlockOffset(requestedAddr);
+    if(lookup_map.find(requestedBlock) != lookup_map.end()){
+        auto map_it = lookup_map.find(requestedBlock);
         if (map_it != lookup_map.end()) {
             victim_buffer.erase(map_it->second);       // remove from list
             lookup_map.erase(map_it);                  // remove from map
