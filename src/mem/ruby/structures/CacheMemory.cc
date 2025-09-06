@@ -63,7 +63,7 @@ namespace ruby
     //  Victim Cache
         std::list<Addr> victim_buffer;
         std::unordered_map<Addr, std::list<Addr>::iterator> lookup_map;
-        int maxVCSize = 8;
+        int maxVCSize = 16;
     //***********************
 
 
