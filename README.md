@@ -1,7 +1,6 @@
 # Victim Cache Analysis in gem5
 
-A **Victim Cache** is a cache optimization that reduces the conflict miss penalty incurred by the L1 cache by storing and serving recently evicted blocks.  
-In this project, I evaluated this property of the victim cache through a series of experiments using the **gem5** simulator.
+A **Victim Cache** is a cache optimization that reduces the conflict miss penalty incurred by the L1 cache by storing and serving recently evicted blocks. In this project, I evaluated this property of the victim cache through a series of experiments using the **gem5** simulator.
 
 ---
 
@@ -9,7 +8,7 @@ In this project, I evaluated this property of the victim cache through a series 
 1. [Introduction to Victim Cache](#introduction-to-victim-cache)   
 2. [Experiments](#experiments)  
    - [Experiment 1 : Configuration and Custom Statistic](#experiment-1)  
-   - [Experiment 2](#experiment-2)  
+   - [Experiment 2: Victim Cache Effectiveness on Microbenchmarks](#experiment-2)  
    - [Experiment 3](#experiment-3)  
    - [Experiment 4](#experiment-4)  
    - [Experiment 5](#experiment-5)  
@@ -37,7 +36,7 @@ Below is a high-level schematic of where the Victim Cache is placed in the hiera
 ### Experiment 1: Configuration Test with Custom Statistic
 
 #### Task
-The only objective of this experiment was to correctly add and verify a custom statistic (`m_count_hits`) to the Ruby memory system in gem5.This counter tracked **L1-D cache hits** and was compared against the predefined `m_demand_hits` counter for verification.
+The only objective of this experiment was to correctly add and verify a custom statistic (`m_count_hits`) to the Ruby memory system in gem5. This counter tracked **L1-D cache hits** and was compared against the predefined `m_demand_hits` counter for verification.
 
 #### Configuration
 
@@ -52,17 +51,54 @@ The only objective of this experiment was to correctly add and verify a custom s
 | Workload              | GAPBS BFS (ARM binary)       |
 
 #### Result
+
+<p align="left">
+  <img src="assets/m_count_hits.png">
+</p>
+
 - The custom statistic `m_count_hits` appeared in `stats.txt`.  
 - Its value exactly matched gem5’s built-in counter `m_demand_hits` for the L1-D cache.  
 - This verified that the counter was correctly integrated into the Ruby subsystem.
 
 ---
 
-### Experiment 2
-- **Task:**  
-- **Setup/Config:**  
-- **Result:**  
-- **Key Takeaway:**  
+### Experiment 2: Victim Cache Effectiveness on Microbenchmarks
+
+#### Task
+The goal of this experiment was to study the **effectiveness of the victim cache** on a set of simple microbenchmarks. The programs were designed to stress the cache with different access behaviors:
+- **Matrix Transpose** – a compute-heavy kernel with regular memory access patterns.  
+- **Tiny Access Pattern** – 50 iterations of a small loop.  
+- **Medium Access Pattern** – 100 iterations of the same loop.  
+- **Full Access Pattern** – 1000 iterations, stressing the cache capacity and conflict behavior.  
+
+This setup enables us to observe how the victim cache responds to workloads with increasing intensity and memory pressure.
+
+#### Setup / Configuration
+
+| Component             | Configuration                |
+|-----------------------|------------------------------|
+| CPU                   | TIMING, 1 core (X86 ISA)     |
+| L1 Data Cache         | 8 KiB, 2-way associative     |
+| L1 Instruction Cache  | 16 KiB, 8-way associative    |
+| L2 Cache              | 256 KiB, 16-way associative  |
+| Memory                | SingleChannelDDR4_2400       |
+| Clock Frequency       | 3 GHz                        |
+
+#### Metrics and Formulae
+
+For each program we collected:
+- `l1d.m_demand_hits`, `l1d.m_demand_misses`, `l1d.m_demand_accesses`  
+- `m_victim_hits`, `m_victim_misses`  
+
+From these, the following derived metrics are reported:
+
+```
+L1_Hit_Rate        =   l1d.m_demand_hits / l1d.m_demand_accesses
+VC_Hit_Rate        =   m_victim_hits / l1d.m_demand_misses
+Combined_Hit_Rate  =   (l1d.m_demand_hits + m_victim_hits) / l1d.m_demand_accesses
+Combined_Miss_Rate =   1 - Combined_Hit_Rate
+```
+
 
 ### Experiment 3
 - **Task:**  
