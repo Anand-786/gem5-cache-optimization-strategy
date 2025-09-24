@@ -1,3 +1,7 @@
+# Analysis of a Cache Optimization Strategy in gem5
+
+This project involves a dive into cache performance analysis and optimization using the gem5 simulator. The primary goal is to investigate methods for improving the efficiency of a processor's memory hierarchy. The primary focus of this study is the analysis of a Victim Cache within the Ruby memory subsystem. The analysis explores its impact on performance by measuring key metrics like miss rates and Average Memory Access Time (AMAT) across various micro-benchmarks and workloads.
+
 # Victim Cache Analysis in gem5
 
 A **Victim Cache** is a cache optimization that reduces the conflict miss penalty incurred by the L1 cache by storing and serving recently evicted blocks. In this project, I evaluated this property of the victim cache through a series of experiments using the **gem5** simulator.
